@@ -11,13 +11,14 @@
     "history",
     "modems"
   ],
-  "icon": "radio",
+  "icon": "radio-tower",
   "url": "/signalrelics/",
   "source": "https://github.com/jsdyer/signalrelics",
   "hosting": "project",
   "access": "browser",
   "data_info": {
     "mode": "snapshot",
-    "detail": "Science Museum Group bulk collection metadata, with source-edition dates and individual image licences; checked monthly."
+    "detail": "Science Museum Group bulk collection metadata, with source-edition dates and individual image licences; checked monthly.",
+    "cadence": "Monthly"
   }
 }
