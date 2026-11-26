@@ -1,16 +1,23 @@
 {
-  "id": "coolcode-tool-template",
-  "title": "CoolCode Tool Starter",
-  "description": "A browser-only example that trims lines and removes exact duplicates.",
-  "category": "security",
-  "tags": ["text", "lines", "duplicates"],
-  "icon": "scan-search",
-  "url": "/coolcode-tool-template/",
-  "source": "https://github.com/jsdyer/coolcode-tool-template",
+  "id": "signalrelics",
+  "title": "Signal Relics",
+  "description": "Explore historical modems, computers, telephones and radio equipment through museum records, dates, makers and image rights.",
+  "category": "media",
+  "tags": [
+    "museum",
+    "computing",
+    "telephones",
+    "radio",
+    "history",
+    "modems"
+  ],
+  "icon": "radio",
+  "url": "/signalrelics/",
+  "source": "https://github.com/jsdyer/signalrelics",
   "hosting": "project",
   "access": "browser",
   "data_info": {
-    "mode": "local",
-    "detail": "The browser reads the text you paste and compares its lines."
+    "mode": "snapshot",
+    "detail": "Science Museum Group bulk collection metadata, with source-edition dates and individual image licences; checked monthly."
   }
 }

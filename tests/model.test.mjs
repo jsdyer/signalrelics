@@ -1,21 +1,7 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { cleanLines } from '../web/model.mjs';
-test('trims, removes blanks and preserves first-seen order', () => {
-  assert.deepEqual(cleanLines('  Halifax\nLangley\nHalifax\n\nVancouver  '), {
-    text: 'Halifax\nLangley\nVancouver', count: 3, removed: 1,
-  });
-});
-test('supports Windows and old Mac line endings', () => {
-  assert.equal(cleanLines('a\r\nb\ra').text, 'a\nb');
-});
-test('empty text and whitespace produce an empty result', () => {
-  assert.deepEqual(cleanLines(' \n\t'), { text: '', count: 0, removed: 0 });
-});
-test('preserves case and Unicode', () => {
-  assert.equal(cleanLines('Québec\nquébec\n東京\nQuébec').text, 'Québec\nquébec\n東京');
-});
-test('treats markup as ordinary text', () => {
-  assert.equal(cleanLines('<script>alert(1)</script>\n<script>alert(1)</script>').text, '<script>alert(1)</script>');
-});
-test('rejects non-text input', () => { assert.throws(() => cleanLines(null), TypeError); });
+import test from 'node:test';import assert from 'node:assert/strict';import {filterRecords,csv,loadSaved,safeExternal} from '../web/model.mjs';
+const a={id:'co1',title:'Modem one',groups:['modems'],terms:['network'],description:'Dial-up',makers:['Hayes'],places:[],materials:[],date:'1960–1970',start:1960,end:1970,source:'https://example.org'};const b={...a,id:'co2',title:'Undated telephone',groups:['telephones'],start:null,end:null};
+test('range overlap, maker and category filters work together',()=>{assert.deepEqual(filterRecords([a,b],{from:1965,to:1980,maker:'Hayes',group:'modems'}),[a]);assert.equal(filterRecords([a,b],{from:1980}).length,0)});
+test('new categories are not limited to starter groups',()=>assert.equal(filterRecords([{...a,groups:['new']}],{group:'new'}).length,1));
+test('saved data is validated against known IDs',()=>assert.deepEqual([...loadSaved('["co1","bad"]',new Set(['co1']))],['co1']));
+test('untrusted links and CSV formula inputs are safe',()=>{assert.equal(safeExternal('javascript:alert(1)'),'');assert.equal(safeExternal('https://user:password@example.org'),'');assert.match(csv([{...a,title:'=SUM(1)'}]),/"'=SUM\(1\)"/)});
+test('undated objects sort last without fabricated dates',()=>assert.deepEqual(filterRecords([b,a]).map(r=>r.id),['co1','co2']));

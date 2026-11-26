@@ -1,0 +1,13 @@
+{
+  "sourceUrl": "https://coimages.sciencemuseumgroup.org.uk/datasets/smg_object_records_with_CC_images_09_04_2025.json.zip",
+  "sourceEdition": "2025-04-09",
+  "minimumSourceRecords": 140000,
+  "collections": [
+    {"id":"modems","label":"Modems & networks","patterns":["\\bmodems?\\b","\\brouters?\\b","\\bnetwork interface","\\bacoustic coupler","\\bpacket switch"]},
+    {"id":"computing","label":"Computers & terminals","patterns":["\\bcomputers?\\b","\\bcomputer terminal","\\bmicroprocessor","\\bmicrocomputer","\\bmainframe","\\bpunch(ed)? card"]},
+    {"id":"telephones","label":"Telephones & exchanges","patterns":["\\btelephones?\\b","\\btelephone exchange","\\bswitchboard"]},
+    {"id":"telegraph","label":"Telegraph & telex","patterns":["\\btelegraph","\\btelex","\\bteleprinter"]},
+    {"id":"radio","label":"Radio & wireless","patterns":["\\bradio (receiver|transmitter|set)","\\bwireless (receiver|transmitter|set)","\\btransistor radio"]},
+    {"id":"storage","label":"Storage & memory","patterns":["\\bfloppy","\\bhard (disk|disc)","\\bmagnetic (tape|drum|core)","\\bcd-rom","\\bdata storage"]}
+  ]
+}

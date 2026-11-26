@@ -1,34 +1,6 @@
-<!doctype html>
-<html lang="en-CA">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="{{DESCRIPTION}}">
-  <title>{{TITLE}} · CoolCode</title>
-  <link rel="stylesheet" href="./style.css">
-  <script type="module" src="./app.mjs"></script>
-  {{VISIT_COUNTER}}
-</head>
-<body data-tool-id="{{TOOL_ID}}">
-  <a class="skip" href="#main">Skip to content</a>
-  <header><a href="https://coolcode.ca/">← CoolCode.ca</a><a href="{{SOURCE_URL}}">Source &amp; instructions ↗</a></header>
-  <main id="main">
-    <p class="eyebrow">Browser tool starter</p>
-    <h1>{{TITLE}}</h1>
-    <p class="intro">{{DESCRIPTION}}</p>
-    <section aria-labelledby="example-title">
-      <h2 id="example-title">Clean a list</h2>
-      <p>Trim spaces, skip blank lines and remove exact duplicates. Capitalization stays distinct.</p>
-      <div class="panels">
-        <div><label for="input">Your lines</label><textarea id="input" rows="10" maxlength="100000" spellcheck="false" placeholder="Paste one item per line"></textarea></div>
-        <div><label for="output">Cleaned lines</label><textarea id="output" rows="10" readonly spellcheck="false"></textarea></div>
-      </div>
-      <div class="actions"><button id="sample" type="button">Load example</button><button id="clear" type="button">Clear</button><button id="copy" type="button" hidden>Copy result</button></div>
-      <p id="status" role="status" aria-live="polite">Paste a list to begin.</p>
-      <noscript><p>This tool needs JavaScript to process your text. The source is available above.</p></noscript>
-    </section>
-    <aside aria-label="Privacy"><strong>Stays on your device.</strong> The browser processes your text in this tab. Reloading clears it.</aside>
-  </main>
-  <footer>Part of <a href="https://coolcode.ca/">the CoolCode collection</a>. {{ISSUE_LINK}}</footer>
-</body>
-</html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="{{DESCRIPTION}}"><meta name="theme-color" content="#112c34"><title>Historic modems, computers and communications equipment · CoolCode</title><link rel="stylesheet" href="./style.css"><script type="module" src="./app.mjs"></script>{{VISIT_COUNTER}}</head><body>
+<a class="skip" href="#explore">Skip to objects</a><header><a class="brand" href="https://coolcode.ca/">CoolCode <span>/ Signal Relics</span></a><nav><a href="#method">Sources & rights</a><a href="{{SOURCE_URL}}">GitHub</a></nav></header>
+<main><section class="hero"><div><p class="eyebrow">THE HARDWARE BEHIND THE CONNECTION</p><h1>Before the cloud,<br>there was <em>this.</em></h1><p>Explore the modems, terminals, switchboards and radios that made distance disappear. Every object leads back to its museum record.</p><a class="button" href="#explore">Explore the collection</a></div><aside><strong id="total">—</strong><p>communications and computing objects</p><div class="rule"></div><p id="edition">Loading the museum capture…</p><p class="muted">Science Museum Group · independent collection explorer</p></aside></section>
+<section id="explore"><div class="heading"><div><p class="eyebrow">FOLLOW A SIGNAL THROUGH TIME</p><h2>The collection bench</h2></div><button id="saved-toggle" aria-pressed="false">My saved objects <span id="saved-count">0</span></button></div><div id="groups" class="chips" aria-label="Object collections"></div><div class="filters"><label>Search objects<input id="query" type="search" placeholder="Hayes, telephone, IBM, acoustic coupler…"></label><label>Maker<select id="maker"><option value="">Any maker</option></select></label><label>From year<input id="from" type="number" min="-9999" max="9999" placeholder="Any"></label><label>To year<input id="to" type="number" min="-9999" max="9999" placeholder="Any"></label><label>Order<select id="sort"><option value="oldest">Oldest dated first</option><option value="newest">Newest dated first</option><option value="title">Title A–Z</option></select></label></div><div class="toolbar"><p id="status" role="status">Loading objects…</p><button id="reset">Reset filters</button><button id="export">Export visible CSV</button></div><div id="gallery" class="gallery"></div><button id="more" hidden>Show more objects</button></section>
+<section class="compare"><div class="heading"><div><p class="eyebrow">NOTICE WHAT CHANGED</p><h2>Two objects, side by side</h2></div><button id="clear-compare">Clear comparison</button></div><p>Select Compare on two objects. Dates are museum catalogue descriptions, not a claim about when a technology was invented.</p><div id="comparison" class="comparison"></div></section>
+<section id="method" class="method"><h2>Keep the original context.</h2><div><h3>A dated selection from a larger catalogue</h3><p>Title and object-type matches select records from the museum's published bulk export. Search operates across this captured selection; it is not a live search of every museum object. Missing dates and makers remain unknown. The source edition and our last check are different dates.</p><h3>Images have their own rights</h3><p>Small images are shown only when that individual media file has a recognized licence. Most are noncommercial Creative Commons images, with credit and licence beside each item. Metadata is not permission to reuse every image. Open the museum record to check the current terms before reuse. We do not harvest high-resolution or IIIF images.</p><h3>Your saved objects</h3><p>Saved object IDs stay in this browser. Search and comparison happen locally. Museum image hosts receive normal image requests; the shared CoolCode visit counter measures visits without receiving your search text or saved list.</p><p>Metadata titles, makers and dates: CC0. Descriptions and other text: CC BY 4.0, © The Board of Trustees of the Science Museum. <a href="https://coimages.sciencemuseumgroup.org.uk/datasets/index.html">Source datasets and individual image terms</a>.</p><p>Continue your trail: <a href="https://coolcode.ca/manualshelf/">Manual Shelf</a> · <a href="https://coolcode.ca/freenet-echo/">Freenet Echo</a> · <a href="https://coolcode.ca/bookgraveyard/">Book Graveyard</a>.</p></div></section></main><footer><a href="https://coolcode.ca/">More CoolCode tools</a><span>{{TITLE}} · {{TOOL_ID}}</span>{{ISSUE_LINK}}</footer><dialog id="detail"><button id="close">Close object</button><div id="detail-body"></div></dialog></body></html>

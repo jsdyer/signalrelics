@@ -1,37 +1,17 @@
-import { cleanLines } from './model.mjs';
-const input = document.querySelector('#input');
-const output = document.querySelector('#output');
-const status = document.querySelector('#status');
-const copy = document.querySelector('#copy');
-function update() {
-  const result = cleanLines(input.value);
-  output.value = result.text;
-  status.textContent = `${result.count} unique ${result.count === 1 ? 'line' : 'lines'}; ${result.removed} ${result.removed === 1 ? 'duplicate' : 'duplicates'} removed.`;
-  copy.disabled = result.count === 0;
-}
-input.addEventListener('input', update);
-document.querySelector('#sample').addEventListener('click', () => {
-  input.value = '  Halifax\nLangley\nHalifax\n\nVancouver  ';
-  update();
-});
-document.querySelector('#clear').addEventListener('click', () => {
-  input.value = '';
-  update();
-  input.focus();
-});
-if (navigator.clipboard && window.isSecureContext) {
-  copy.hidden = false;
-  copy.disabled = true;
-  copy.addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText(output.value);
-      status.textContent = 'Result copied.';
-    } catch {
-      output.focus();
-      output.select();
-      status.textContent = 'Copy was unavailable. The result is selected so you can copy it manually.';
-    }
-  });
-}
-// Namespace future preference storage as coolcode:<tool-id>:<key>.
-// Do not persist pasted text or uploads by default.
+import {filterRecords,csv,loadSaved,safeExternal} from './model.mjs';
+const $=id=>document.getElementById(id),el=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
+const key='coolcode:signalrelics:saved:v1';let data,config,group='',saved=new Set(),savedOnly=false,selected=[],limit=48,visible=[];
+const link=(title,url)=>{const a=el('a',title);a.href=safeExternal(url);a.target='_blank';a.rel='noopener noreferrer';return a;};
+const button=(title,fn)=>{const b=el('button',title);b.type='button';b.addEventListener('click',fn);return b;};
+function picture(r){const box=el('figure',undefined,'object-image');if(r.image&&safeExternal(r.image.url)){const img=el('img');img.src=r.image.url;img.alt=r.title;img.loading='lazy';img.referrerPolicy='no-referrer';img.addEventListener('error',()=>{img.remove();box.append(el('span','Preview unavailable · open museum record'));},{once:true});box.append(img);}else box.append(el('span','Museum record · no supported preview'));return box;}
+function credit(r){const p=el('p',undefined,'credit');if(r.image){p.append(document.createTextNode(`${r.image.copyright||r.image.credit||'Science Museum Group'} · `),link(r.image.licence,r.image.licenceUrl));}else p.textContent='See the museum record for image rights.';return p;}
+function details(r){const d=el('dl');for(const [name,value]of [['Museum date',r.date],['Maker',r.makers.join('; ')||'Not recorded'],['Place made',r.places.join('; ')||'Not recorded'],['Material',r.materials.join('; ')||'Not recorded'],['Object terms',r.terms.join('; ')],['Museum ID',r.id]])d.append(el('dt',name),el('dd',value));return d;}
+function inspect(r){$('detail-body').replaceChildren(picture(r),el('h2',r.title),details(r),el('p',r.description),credit(r),link('Read the original museum record',r.source));$('detail').showModal();}
+function save(r){saved.has(r.id)?saved.delete(r.id):saved.add(r.id);try{localStorage.setItem(key,JSON.stringify([...saved]));}catch{$('status').textContent='Browser storage is unavailable. Export your selection to keep it.';}render();}
+function comparison(){const target=$('comparison');target.replaceChildren();for(let i=0;i<2;i++){const r=selected[i];if(!r){target.append(el('p','Choose an object to compare.','empty'));continue;}const card=el('article');card.append(picture(r),el('h3',r.title),details(r),credit(r),link('Museum record',r.source));target.append(card);}}
+function compare(r){selected=selected.some(x=>x.id===r.id)?selected.filter(x=>x.id!==r.id):[...selected.slice(-1),r];comparison();render();}
+function render(){if(!data)return;const from=$('from').value===''?null:Number($('from').value),to=$('to').value===''?null:Number($('to').value);if(from!==null&&to!==null&&from>to){$('status').textContent='The first year must be no later than the last year.';return;}visible=filterRecords(data.records,{query:$('query').value,group,maker:$('maker').value,from,to,saved:savedOnly?saved:null,sort:$('sort').value});$('saved-count').textContent=saved.size;$('saved-toggle').setAttribute('aria-pressed',String(savedOnly));$('status').textContent=`${visible.length.toLocaleString()} matching objects · showing ${Math.min(limit,visible.length)} · ${visible.filter(r=>r.start===null).length} without a recorded start year`;$('gallery').replaceChildren();for(const r of visible.slice(0,limit)){const card=el('article',undefined,'card');const copy=el('div',undefined,'card-copy');const actions=el('div',undefined,'actions');const c=button(selected.some(x=>x.id===r.id)?'Compared':'Compare',()=>compare(r));c.setAttribute('aria-pressed',String(selected.some(x=>x.id===r.id)));const s=button(saved.has(r.id)?'Saved':'Save',()=>save(r));s.setAttribute('aria-label',`${saved.has(r.id)?'Remove saved':'Save'} ${r.title}`);s.setAttribute('aria-pressed',String(saved.has(r.id)));actions.append(button('Inspect',()=>inspect(r)),c,s);copy.append(el('p',r.date,'date'),el('h3',r.title),el('p',r.makers.join(' · ')||'Maker not recorded','maker'),actions,credit(r));card.append(picture(r),copy);$('gallery').append(card);}if(!visible.length)$('gallery').append(el('p','No objects match. Try another term, clear the dates or leave your saved collection.','empty'));$('more').hidden=limit>=visible.length;$('export').disabled=!visible.length;}
+for(const id of ['query','maker','from','to','sort'])$(id).addEventListener('input',()=>{limit=48;render();});$('more').addEventListener('click',()=>{limit+=48;render();});$('saved-toggle').addEventListener('click',()=>{savedOnly=!savedOnly;limit=48;render();});$('clear-compare').addEventListener('click',()=>{selected=[];comparison();render();});$('close').addEventListener('click',()=>$('detail').close());$('reset').addEventListener('click',()=>{for(const id of ['query','maker','from','to'])$(id).value='';group='';savedOnly=false;limit=48;chips();render();});
+$('export').addEventListener('click',()=>{const url=URL.createObjectURL(new Blob([csv(visible)],{type:'text/csv;charset=utf-8'}));const a=el('a');a.href=url;a.download='signal-relics.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+function chips(){$('groups').replaceChildren();for(const c of [{id:'',label:'All objects'},...config.collections]){const count=c.id?data.records.filter(r=>r.groups.includes(c.id)).length:data.records.length;const b=button(`${c.label} · ${count}`,()=>{group=c.id;limit=48;chips();render();});b.setAttribute('aria-pressed',String(group===c.id));$('groups').append(b);}}
+try{const response=await Promise.all([fetch('./config.json'),fetch('./data/objects.json')]);if(response.some(r=>!r.ok))throw Error('Collection files unavailable');[config,data]=await Promise.all(response.map(r=>r.json()));if(!data.records?.length)throw Error('No validated objects');try{saved=loadSaved(localStorage.getItem(key),new Set(data.records.map(r=>r.id)));}catch{}for(const name of [...new Set(data.records.flatMap(r=>r.makers))].sort()){const o=el('option',name);o.value=name;$('maker').append(o);}$('total').textContent=data.count.toLocaleString();$('edition').textContent=`Source edition ${data.sourceEdition} · checked ${data.checkedAt.slice(0,10)} UTC`;chips();comparison();render();}catch(e){$('status').textContent=`The collection could not load: ${e.message}. Please reload or open the source repository.`;}
